@@ -17,6 +17,10 @@ Makefile
 *.ninja
 .ninja_deps
 .ninja_log
+Configuring
+Done
+Building
+Cleaning
 
 # --- Compiled objects & libraries ---
 *.o
