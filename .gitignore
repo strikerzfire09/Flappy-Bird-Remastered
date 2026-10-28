@@ -1,0 +1,95 @@
+# ---------------------------------------------------------------------------
+# Flappy Bird — Git ignore rules (Windows + Linux)
+# Format: one pattern per line. Blank lines and # comments are ignored.
+# Patterns match anywhere unless anchored. Trailing / = directories only.
+# ---------------------------------------------------------------------------
+
+# --- Build outputs (CMake / Make / Ninja) ---
+build/
+build_*/
+cmake-build-*/
+out/
+compile_commands.json
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.ninja
+.ninja_deps
+.ninja_log
+
+# --- Compiled objects & libraries ---
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exp
+*.pdb
+*.ilk
+*.idb
+*.map
+
+# --- Executables & packages ---
+*.exe
+*.out
+*.app
+*.msi
+*.deb
+*.rpm
+*.AppImage
+flappybird
+flappybird.exe
+
+# --- IDE / editors ---
+.vs/
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.user
+*.suo
+*.sln.docstates
+*.swp
+*.swo
+*~
+*.code-workspace
+
+# --- OS junk ---
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# --- Logs / temporary / local env ---
+*.log
+*.tmp
+*.temp
+*.bak
+*.orig
+.cache/
+.local/
+.env
+.env.*
+!.env.example
+
+# --- Coverage / sanitizer / profiling ---
+*.gcda
+*.gcno
+*.gcov
+*.profraw
+*.profdata
+asan/
+tsan/
+ubsan/
+
+# --- Raylib / generated (if built in-tree accidentally) ---
+third_party/raylib/src/*.o
+third_party/raylib/src/raylib.a
+third_party/raylib/src/libraylib.a
