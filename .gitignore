@@ -93,3 +93,4 @@ ubsan/
 third_party/raylib/src/*.o
 third_party/raylib/src/raylib.a
 third_party/raylib/src/libraylib.a
+third_party/raylib

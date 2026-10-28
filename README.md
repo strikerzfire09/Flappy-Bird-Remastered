@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Flappy Bird (C++ / raylib)
 
 A polished Flappy Bird clone in C++17 using [raylib 6.2](https://www.raylib.com/)
@@ -83,3 +84,7 @@ third_party/raylib/     # vendored raylib 6.2 source
   code is standard `.rc` + CMake.
 - `assets/` is copied next to the binary after building so the game runs
   straight from `build/`.
+=======
+# Flappy-Bird-Remastered
+Flappy Bird Remastered 🚀 A modernized, cross-platform take on the iconic arcade classic! Rebuilt from the ground up with enhanced visuals, smooth 60 FPS gameplay, and seamless multi-device support. 🕹️✨
+>>>>>>> 61adfa19132290f5b56200bd48e0f0e7639f1569
