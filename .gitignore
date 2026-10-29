@@ -11,6 +11,10 @@
 /out/
 /.flatpak-builder/
 /vcpkg_installed/
+Building
+Cleaning
+Configuring
+Done
 
 # CMake's in-source fallback artifacts. The wrappers use out-of-source builds.
 /CMakeCache.txt
