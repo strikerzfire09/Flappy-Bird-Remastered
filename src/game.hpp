@@ -35,7 +35,6 @@ struct Game {
     float groundScroll = 0.0f;
     float runTime = 0.0f;
     float deathTimer = 0.0f;
-    float pipeTimer = 0.0f;
 
     daynight::State daynightSt;
 
@@ -59,7 +58,8 @@ struct Game {
 extern Game gGame;
 
 void GameInit();
-void GameFixedUpdate(); // fixed 120 Hz simulation
+void GameFixedUpdate();                 // fixed 120 Hz simulation
+void GameFrameInput(Vector2 worldMouse); // once per rendered frame
 void GameRender();
 
 } // namespace game

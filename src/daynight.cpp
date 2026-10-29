@@ -213,23 +213,4 @@ void DrawScenery(const State& st, float night) {
     }
 }
 
-Color SkyColor(const State& st) {
-    const float n = Ease(st);
-    const Color day = {113, 197, 207, 255};
-    const Color night = {20, 24, 48, 255};
-    return {
-        static_cast<unsigned char>(day.r + (night.r - day.r) * n),
-        static_cast<unsigned char>(day.g + (night.g - day.g) * n),
-        static_cast<unsigned char>(day.b + (night.b - day.b) * n),
-        255,
-    };
-}
-
-Color PipeTint(const State& st) {
-    const float n = Ease(st);
-    const unsigned char c =
-        static_cast<unsigned char>(255.0f - 35.0f * n);
-    return {c, c, c, 255};
-}
-
 } // namespace daynight

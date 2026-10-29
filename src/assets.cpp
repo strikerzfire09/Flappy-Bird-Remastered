@@ -5,55 +5,13 @@
 #include <string>
 #include <vector>
 
-#include <raylib.h>
+#include "platform/platform.hpp"
 
-// Avoid windows.h — it collides with raylib (Rectangle, LoadImage, CloseWindow).
-#if defined(_WIN32)
-extern "C" unsigned long __stdcall GetModuleFileNameA(void* module, char* filename,
-                                                      unsigned long size);
-#elif defined(__APPLE__)
-#include <mach-o/dyld.h>
-#else
-#include <unistd.h>
-#endif
+#include <raylib.h>
 
 AssetManager assets;
 
 namespace {
-
-std::string ExeDir() {
-#if defined(_WIN32)
-    char path[512];
-    unsigned long n = GetModuleFileNameA(nullptr, path, sizeof(path) - 1);
-    if (n == 0) return ".";
-    path[n] = '\0';
-    std::string p = path;
-    size_t slash = p.find_last_of("\\/");
-    if (slash != std::string::npos) p = p.substr(0, slash);
-    return p;
-#elif defined(__APPLE__)
-    char path[4096];
-    uint32_t size = sizeof(path);
-    if (_NSGetExecutablePath(path, &size) == 0) {
-        std::string p = path;
-        size_t slash = p.find_last_of('/');
-        if (slash != std::string::npos) p = p.substr(0, slash);
-        return p;
-    }
-    return ".";
-#else
-    char path[4096];
-    ssize_t n = readlink("/proc/self/exe", path, sizeof(path) - 1);
-    if (n > 0) {
-        path[n] = '\0';
-        std::string p = path;
-        size_t slash = p.find_last_of('/');
-        if (slash != std::string::npos) p = p.substr(0, slash);
-        return p;
-    }
-    return ".";
-#endif
-}
 
 bool FileExists(const std::string& path) {
     FILE* f = std::fopen(path.c_str(), "rb");
@@ -69,10 +27,9 @@ std::vector<std::string> CandidateRoots(const std::string& exeDir,
     roots.push_back(exeDir + "/../share/flappybird/assets"); // layout install
     roots.push_back("./assets");                          // current working dir
     roots.push_back(compileDir);                          // source tree (dev)
-#if !defined(_WIN32)
-    roots.push_back("/usr/local/share/flappybird/assets"); // system install
-    roots.push_back("/usr/share/flappybird/assets");
-#endif
+    for (const auto& dir : platform::SystemAssetDirs()) {  // OS install paths
+        roots.push_back(dir);
+    }
     return roots;
 }
 
@@ -84,7 +41,7 @@ AssetManager::AssetManager() {
 #else
     baseDir = "assets";
 #endif
-    roots = CandidateRoots(ExeDir(), baseDir);
+    roots = CandidateRoots(platform::ExecutableDir(), baseDir);
 }
 
 AssetManager::~AssetManager() { UnloadAll(); }
@@ -96,6 +53,10 @@ std::string AssetManager::Resolve(const char* relativePath) const {
     }
     // Return a best-guess path so the error message is useful.
     return baseDir + "/" + relativePath;
+}
+
+std::string AssetManager::ResolveAsset(const char* relativePath) const {
+    return Resolve(relativePath);
 }
 
 bool AssetManager::LoadTextureEx(const char* relativePath, Texture2D& out) {
@@ -113,6 +74,10 @@ bool AssetManager::LoadTextureEx(const char* relativePath, Texture2D& out) {
 }
 
 Sound AssetManager::LoadSoundEx(const char* relativePath) {
+    // Loading audio with no initialized device can divide by a zero sample
+    // rate inside miniaudio; stay silent instead of crashing.
+    if (!IsAudioDeviceReady()) return {};
+
     // Prefer WAV (PCM), fall back to OGG.
     std::string wav = relativePath;
     std::string ogg = relativePath;
@@ -166,21 +131,34 @@ bool AssetManager::LoadAll() {
 }
 
 void AssetManager::UnloadAll() {
-    UnloadSound(sndWing);
-    UnloadSound(sndPoint);
-    UnloadSound(sndSwoosh);
-    UnloadSound(sndHit);
-    UnloadSound(sndDie);
-    UnloadTexture(bgDay);
-    UnloadTexture(bgNight);
-    UnloadTexture(base);
-    UnloadTexture(birdUp);
-    UnloadTexture(birdMid);
-    UnloadTexture(birdDown);
-    UnloadTexture(pipeBody);
-    UnloadTexture(pipeBodyNight);
-    for (int i = 0; i < 10; ++i) UnloadTexture(digit[i]);
-    UnloadTexture(gameOver);
-    UnloadTexture(message);
+    // Guard every unload and clear the handles. This makes shutdown safe even
+    // though the global destructor calls UnloadAll() again after main.
+    auto texture = [](Texture2D& t) {
+        if (t.id != 0) UnloadTexture(t);
+        t = {};
+    };
+    auto sound = [](Sound& s) {
+        if (s.stream.buffer != nullptr) UnloadSound(s);
+        s = {};
+    };
+
+    sound(sndWing);
+    sound(sndPoint);
+    sound(sndSwoosh);
+    sound(sndHit);
+    sound(sndDie);
+
+    texture(bgDay);
+    texture(bgNight);
+    texture(base);
+    texture(birdUp);
+    texture(birdMid);
+    texture(birdDown);
+    texture(pipeBody);
+    texture(pipeBodyNight);
+    for (auto& d : digit) texture(d);
+    texture(gameOver);
+    texture(message);
+
     ready = false;
 }

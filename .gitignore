@@ -1,82 +1,101 @@
 # ---------------------------------------------------------------------------
-# Flappy Bird — Git ignore rules (Windows + Linux)
-# Format: one pattern per line. Blank lines and # comments are ignored.
-# Patterns match anywhere unless anchored. Trailing / = directories only.
+# Flappy Bird Remastered — ignored files
+# Covers builds on Windows (MSVC / MinGW), Linux (GCC / Clang), and macOS.
 # ---------------------------------------------------------------------------
 
-# --- Build outputs (CMake / Make / Ninja) ---
-build/
-build_*/
-cmake-build-*/
-out/
-compile_commands.json
-CMakeCache.txt
-CMakeFiles/
-cmake_install.cmake
-Makefile
-*.ninja
-.ninja_deps
-.ninja_log
-Configuring
-Done
-Building
-Cleaning
+# --- Platform build trees (created by build.sh / build.bat / CMake) ---
+/build/
+/build-*/
+/build_*/
+/cmake-build-*/
+/out/
+/.flatpak-builder/
+/vcpkg_installed/
 
-# --- Compiled objects & libraries ---
-*.o
+# CMake's in-source fallback artifacts. The wrappers use out-of-source builds.
+/CMakeCache.txt
+/CMakeFiles/
+/cmake_install.cmake
+/CTestTestfile.cmake
+/Makefile
+/*.ninja
+/.ninja_deps
+/.ninja_log
+/.cmake/
+compile_commands.json
+/CMakeUserPresets.json
+/resources/flappy.rc
+
+# --- Windows / Visual Studio generated files ---
+/.vs/
+/*.sln
+/*.vcxproj
+/*.vcxproj.filters
+/*.vcxproj.user
+/*.dir/
+/*.VC.db
+/*.VC.VC.opendb
+/*.opendb
+/*.ipch
+/*.aps
+/*.ncb
+/*.sdf
+/*.opensdf
+/*.suo
+/*.user
+*.tlog
+/Debug/
+/Release/
+/x64/
+/x86/
+/ARM64/
+*.exe
+*.dll
 *.obj
-*.a
 *.lib
+*.pdb
+*.ilk
+*.exp
+*.res
+*.idb
+*.pch
+*.gch
+
+# --- Linux / macOS objects and binaries ---
+*.o
+*.a
 *.so
 *.so.*
 *.dylib
-*.dll
-*.exp
-*.pdb
-*.ilk
-*.idb
-*.map
-
-# --- Executables & packages ---
-*.exe
+*.dSYM/
 *.out
-*.app
-*.msi
+*.elf
+/flappybird
+*.AppImage
 *.deb
 *.rpm
-*.AppImage
-flappybird
-flappybird.exe
+*.msi
+*.msix
+*.dmg
+*.pkg
 
-# --- IDE / editors ---
-.vs/
-.vscode/
-!.vscode/extensions.json
-!.vscode/settings.json
-.idea/
-*.user
-*.suo
-*.sln.docstates
-*.swp
-*.swo
-*~
-*.code-workspace
-
-# --- OS junk ---
-.DS_Store
-.AppleDouble
-.LSOverride
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-$RECYCLE.BIN/
-
-# --- Logs / temporary / local env ---
+# --- Logs, crash dumps, and temporary files ---
 *.log
 *.tmp
 *.temp
 *.bak
 *.orig
+*.rej
+*.swp
+*.swo
+*~
+*.pid
+*.stackdump
+/core
+/core.*
+/vgcore.*
+/perf.data*
+/callgrind.out.*
 .cache/
 .local/
 .env
@@ -89,12 +108,42 @@ $RECYCLE.BIN/
 *.gcov
 *.profraw
 *.profdata
-asan/
-tsan/
-ubsan/
+/asan/
+/tsan/
+/ubsan/
 
-# --- Raylib / generated (if built in-tree accidentally) ---
-third_party/raylib/src/*.o
-third_party/raylib/src/raylib.a
-third_party/raylib/src/libraylib.a
-third_party/raylib
+# --- Editors / IDEs ---
+/.vscode/*
+!/.vscode/extensions.json
+!/.vscode/settings.json
+/.idea/
+/.zed/
+/.fleet/
+/.history/
+*.code-workspace
+
+# --- OS metadata ---
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+# Linux
+.directory
+.Trash-*
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100/
+.Trashes/
+.fseventsd/
+Icon\r
+
+# --- Third-party dependencies ---
+# raylib is not vendored. CMake fetches it at configure time; a local checkout
+# under third_party/raylib may be used for offline builds but is never committed.
+/third_party/raylib/
+/third_party/.cache/

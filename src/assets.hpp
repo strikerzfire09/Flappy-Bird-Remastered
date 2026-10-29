@@ -18,7 +18,8 @@ public:
     AssetManager& operator=(const AssetManager&) = delete;
 
     bool LoadAll();            // returns false if any required asset is missing
-    void UnloadAll();
+    void UnloadAll();          // safe to call more than once
+    std::string ResolveAsset(const char* relativePath) const;
 
     // ----- textures -----
     Texture2D bgDay;

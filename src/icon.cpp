@@ -63,9 +63,7 @@ bool LoadFileBytes(const char* path, std::vector<unsigned char>& out) {
 }
 
 // Pick the best icon frame: highest bit depth, then largest dimensions.
-int PickEntry(const std::vector<unsigned char>& /*data*/,
-              const IcoHeader& header,
-              const IcoEntry* entries) {
+int PickEntry(const IcoHeader& header, const IcoEntry* entries) {
     int best = -1;
     int bestKey = -1;
     for (uint16_t i = 0; i < header.count; ++i) {
@@ -99,7 +97,7 @@ Image LoadWindowIconFromIco(const char* icoPath) {
 
     const IcoEntry* entries =
         reinterpret_cast<const IcoEntry*>(data.data() + headerSize);
-    int idx = PickEntry(data, *hdr, entries);
+    int idx = PickEntry(*hdr, entries);
     if (idx < 0) return empty;
 
     const IcoEntry& e = entries[idx];
@@ -113,7 +111,10 @@ Image LoadWindowIconFromIco(const char* icoPath) {
     if (bmp->compression != 0 && bmp->compression != 3) return empty; // RGB or bitfields
 
     int w = bmp->width;
-    int h = bmp->height;
+    // In an ICO, the DIB height covers the XOR image plus the AND mask, so
+    // the actual image height is half of it. Ignoring this makes the buffer
+    // bounds check fail for every normal .ico file.
+    int h = bmp->height / 2;
     if (w <= 0 || h <= 0) return empty;
 
     // Pixel data starts after the DIB header (+ color masks for bitfields).

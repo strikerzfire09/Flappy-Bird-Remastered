@@ -29,10 +29,6 @@ bool IsNight(const State& st);
 // before pipes. `night` is Ease(st).
 void DrawScenery(const State& st, float night);
 
-// Clear-color / pipe tint blended by the current day→night ease.
-Color SkyColor(const State& st);
-Color PipeTint(const State& st);
-
 } // namespace daynight
 
 #endif // FLAPPYBIRD_DAYNIGHT_HPP

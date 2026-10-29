@@ -31,14 +31,11 @@ inline constexpr float PIPE_SPEED_START = 140.0f;
 inline constexpr float PIPE_SPEED_MAX = 260.0f;
 inline constexpr float PIPE_SPEED_ACCEL = 3.5f;    // added per point scored
 inline constexpr float PIPE_SPACING = 154.0f;      // world px between pipe edges
-inline constexpr float PIPE_MIN_X_FROM_EDGE = PIPE_SPACING;
-inline constexpr float PIPE_SPAWN_INTERVAL = 1.35f; // seconds between spawns
-inline constexpr float PIPE_GAP_START = 110.0f;
-inline constexpr float PIPE_GAP_MIN = 88.0f;
-inline constexpr float PIPE_GAP_SHRINK_PER_POINT = 1.8f;
+inline constexpr float PIPE_GAP_START = 138.0f;
+inline constexpr float PIPE_GAP_MIN = 112.0f;
+inline constexpr float PIPE_GAP_SHRINK_PER_POINT = 1.5f;
 inline constexpr float BIRD_X = 70.0f;
 inline constexpr float GROUND_H = 112.0f;
-inline constexpr float BIRD_RADIUS = 10.0f;
 
 // Forgiving bird collision box (sprite is 34x24).
 inline constexpr float BIRD_HITBOX_W = 24.0f;
@@ -88,8 +85,6 @@ inline constexpr Color TEXT_OUTLINE_DARK = {16, 18, 26, 255};
 // ---------------------------------------------------------------------------
 struct Runtime {
     bool mute = false;
-    bool fullscreen = false;
-    bool debug = false;
     bool showFps = false;
     int windowW = WINDOW_W;
     int windowH = WINDOW_H;

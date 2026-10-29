@@ -2,7 +2,6 @@
 
 #include <cmath>
 #include <cstdio>
-#include <cstring>
 #include <string>
 #include <vector>
 
@@ -34,12 +33,6 @@ unsigned int ColorKey(Color c) {
            (static_cast<unsigned int>(c.g) << 16) |
            (static_cast<unsigned int>(c.b) << 8) |
            static_cast<unsigned int>(c.a);
-}
-
-void DrawTextShadowed(const char* text, int x, int y, int fontSize,
-                      Color fg, Color shadow) {
-    DrawText(text, x + 1, y + 2, fontSize, shadow);
-    DrawText(text, x, y, fontSize, fg);
 }
 
 const Label& GetLabel(const char* text, int size, Color fg, Color outline) {
@@ -100,13 +93,6 @@ const Label& GetLabel(const char* text, int size, Color fg, Color outline) {
 
     gLabels.push_back(label);
     return gLabels.back();
-}
-
-void DrawLabel(const char* text, int x, int y, int size, Color fg,
-               Color outline) {
-    const Label& label = GetLabel(text, size, fg, outline);
-    if (label.texture.id == 0) return;
-    DrawTexture(label.texture, x - LABEL_PAD, y - LABEL_PAD, WHITE);
 }
 
 void DrawLabelCentered(const char* text, int centerX, int y, int size,
@@ -177,12 +163,12 @@ void DrawMedal(int score, int x, int y) {
 } // namespace
 
 void Init() {
+    gLabels.reserve(64);
     // Pre-warm every static label used by the menus.
     const Color white = cfg::vis::TEXT_WHITE;
     const Color darkOutline = cfg::vis::TEXT_OUTLINE_DARK;
     const Color gold = {255, 226, 120, 255};
 
-    GetLabel("START", FONT_LARGE, white, darkOutline);
     GetLabel("RESTART", FONT_LARGE, white, darkOutline);
     GetLabel("MAIN MENU", FONT_LARGE, white, darkOutline);
     GetLabel("RESUME", FONT_LARGE, white, darkOutline);
@@ -305,10 +291,10 @@ void DrawHud(int score, int highScore) {
 
 void DrawStartScreen(int highScore) {
     Texture2D& msg = assets.message;
-    const float scale = 0.78f;
+    const float scale = 0.72f;
     Rectangle src = {0, 0, static_cast<float>(msg.width),
                      static_cast<float>(msg.height)};
-    Rectangle dst = {cfg::WORLD_W / 2 - msg.width * scale * 0.5f, 48.0f,
+    Rectangle dst = {cfg::WORLD_W / 2 - msg.width * scale * 0.5f, 44.0f,
                      static_cast<float>(msg.width) * scale,
                      static_cast<float>(msg.height) * scale};
     DrawTexturePro(msg, src, dst, {0, 0}, 0.0f, WHITE);
