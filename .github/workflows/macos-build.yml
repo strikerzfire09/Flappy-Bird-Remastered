@@ -1,0 +1,31 @@
+name: macOS Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          brew install cmake ninja
+
+      - name: Build macOS executable
+        run: bash github-build-macos.sh
+
+      - name: Upload macOS executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: flappybird-macos
+          path: build/macos/bin/flappybird
+          if-no-files-found: error
+          retention-days: 30
