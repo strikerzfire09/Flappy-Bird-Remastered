@@ -299,7 +299,7 @@ void DrawStartScreen(int highScore) {
                      static_cast<float>(msg.height) * scale};
     DrawTexturePro(msg, src, dst, {0, 0}, 0.0f, WHITE);
 
-    float blink = 0.5f + 0.5f * std::sinf(GetTime() * 4.0f);
+    float blink = 0.5f + 0.5f * std::sin(GetTime() * 4.0f);
     if (blink > 0.25f) {
         DrawLabelCentered("TAP / SPACE / CLICK TO FLY", cfg::WORLD_W / 2,
                           330, FONT_SMALL, cfg::vis::TEXT_DARK,
